@@ -1,42 +1,69 @@
 <template lang="pug">
-    div#app
+    #app.wrapper
         .header
             a.logo(href="/")
         main
-            .peoples
-                Star(v-for="item in people" :people="item" :key="item.id" v-show="isLoaded")
+            div
+            .peoples(v-show="this.$store.state.isLoaded")
+                Star(v-for="item in showPeople" :people="item" :key="item.id")
 
-            div(v-show="!isLoaded") Loading
+            Loader(v-show="!this.$store.state.isLoaded")
+                
         .footer STAR WARS CHARACTER Encyclopedia, 2019
 </template>
 
 <script>
 import Star from "./components/Star.vue";
+import Loader from "./components/Loader.vue";
+
+// function show(ms) {
+// 	return new Promise(resolve => setTimeout(resolve, ms));
+// }
 
 export default {
 	name: "App",
 	components: {
-		Star
+		Star,
+		Loader
 	},
 	data: function() {
 		return {
-			people: [],
-			isLoaded: false
+			// showPeople: []
 		};
 	},
+	computed: {
+		showPeople: function() {
+			return this.$store.state.people;
+		}
+	},
 	mounted() {
-		fetch("https://swapi.dev/api/people/")
-			.then(res => res.json())
-			.then(
-				result => {
-					this.people = result.results;
-					this.isLoaded = true;
-				},
-				error => {
-					this.isLoaded = false;
-					error;
-				}
-			);
+		this.$store.commit("getPeople");
+		// setTimeout(() => {
+		// 	this.$store.commit("getPeople"),
+		// 		// (this.showPeople = );
+		// }, 300);
+		// this.$store.commit("getPeople");
+		// fetch("https://swapi.dev/api/people/")
+		// 	.then(res => res.json())
+		// 	.then(result => {
+		// 		this.people = result.results;
+		// 		// console.log(this.people);
+		// 		setTimeout(() => (this.isLoaded = true), 1);
+		// 	});
+		// console.log(this.people);
+		// axios.get("https://swapi.dev/api/people/").then(result => {
+		// 	this.people = result.data.results;
+		// 	console.log(this.people);
+		// 	setTimeout(() => (this.isLoaded = true), 1);
+		// });
+		// async function demo() {
+		// 	for (let i = 0; i < this.$store.state.people.length; i++) {
+		// 		// this.showPeople.push(this.people[i]);
+		// 		console.log(this.$store.state.people[i]);
+		// 		await show(1000);
+		// 	}
+		// }
+		// demo();
 	}
 };
 </script>
@@ -47,9 +74,12 @@ export default {
 body
     background: #333333
     font-size: 18px
-
-#app
     font-family: Roboto
+
+.wrapper
+    min-height: 100vh
+    position: relative
+    padding-bottom: 120px
 
 .header
     height: 33vh
@@ -65,10 +95,11 @@ body
 .logo
     display: block
     background-image: url(./assets/img/logo.png)
-    height: 239px
-    width: 400px
+    height: 60%
+    width: 50%
     background-position: center center
     background-repeat: no-repeat
+    background-size: contain
 
 .footer
     background: #1A1A1A
@@ -76,6 +107,9 @@ body
     color: #ffffff
     padding: 30px
     text-transform: uppercase
+    position: absolute
+    bottom: 0
+    width: 100%
 
 main
     max-width: 1000px
