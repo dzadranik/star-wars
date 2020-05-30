@@ -5,15 +5,20 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 const store = new Vuex.Store({
   state: {
-    people: [],
+    stars: [],
     isLoaded: false
   },
+  getters: {
+    getMoreStars: state => () => {
+      return state.stars.slice(0, 10)
+    }
+  },
   mutations: {
-    getPeople(state) {
+    getStar(state) {
       fetch("https://swapi.dev/api/people/")
         .then(res => res.json())
         .then(result => {
-          state.people = result.results;
+          state.stars = result.results;
           state.isLoaded = true
         });
     },

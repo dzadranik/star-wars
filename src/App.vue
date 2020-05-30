@@ -1,13 +1,12 @@
 <template lang="pug">
-    #app.wrapper
+    #app.app.js-app
         .header
             a.logo(href="/")
         main
-            div
-            .peoples(v-show="this.$store.state.isLoaded")
-                Star(v-for="item in showPeople" :people="item" :key="item.id")
+            .stars(v-show="isLoaded")
+                Star(v-for="item in stars" :star="item" :key="item.id")
 
-            Loader(v-show="!this.$store.state.isLoaded")
+            Loader(v-show="!isLoaded || loadMore")
                 
         .footer STAR WARS CHARACTER Encyclopedia, 2019
 </template>
@@ -15,10 +14,7 @@
 <script>
 import Star from "./components/Star.vue";
 import Loader from "./components/Loader.vue";
-
-// function show(ms) {
-// 	return new Promise(resolve => setTimeout(resolve, ms));
-// }
+import { mapState } from "vuex";
 
 export default {
 	name: "App",
@@ -28,42 +24,55 @@ export default {
 	},
 	data: function() {
 		return {
-			// showPeople: []
+			loadMore: false
 		};
 	},
 	computed: {
-		showPeople: function() {
-			return this.$store.state.people;
+		...mapState(["stars", "isLoaded"])
+		// stars: function() {
+		// 	return this.$store.state.stars;
+		// },
+		// isLoaded: function() {
+		// 	return this.$store.state.isLoaded;
+		// }
+	},
+	methods: {
+		getMoreStars: function() {
+			this.stars.push(...this.$store.getters.getMoreStars());
+		},
+		changeLoadMore: function() {
+			this.loadMore = !this.loadMore;
 		}
 	},
 	mounted() {
-		this.$store.commit("getPeople");
-		// setTimeout(() => {
-		// 	this.$store.commit("getPeople"),
-		// 		// (this.showPeople = );
-		// }, 300);
-		// this.$store.commit("getPeople");
-		// fetch("https://swapi.dev/api/people/")
-		// 	.then(res => res.json())
-		// 	.then(result => {
-		// 		this.people = result.results;
-		// 		// console.log(this.people);
-		// 		setTimeout(() => (this.isLoaded = true), 1);
-		// 	});
-		// console.log(this.people);
-		// axios.get("https://swapi.dev/api/people/").then(result => {
-		// 	this.people = result.data.results;
-		// 	console.log(this.people);
-		// 	setTimeout(() => (this.isLoaded = true), 1);
-		// });
-		// async function demo() {
-		// 	for (let i = 0; i < this.$store.state.people.length; i++) {
-		// 		// this.showPeople.push(this.people[i]);
-		// 		console.log(this.$store.state.people[i]);
-		// 		await show(1000);
-		// 	}
-		// }
-		// demo();
+		let app = document.querySelector(".js-app"),
+			commit = this.$store.commit,
+			getMoreStars = this.getMoreStars,
+			changeLoadMore = this.changeLoadMore,
+			isLock = false;
+
+		setTimeout(function() {
+			commit("getStar");
+			isLock = true;
+		}, 1000);
+
+		window.addEventListener("scroll", function() {
+			if (
+				pageYOffset >=
+					app.offsetHeight -
+						document.documentElement.clientHeight -
+						1 &&
+				isLock
+			) {
+				isLock = false;
+				changeLoadMore();
+				setTimeout(function() {
+					getMoreStars();
+					isLock = true;
+					changeLoadMore();
+				}, 1000);
+			}
+		});
 	}
 };
 </script>
@@ -75,8 +84,9 @@ body
     background: #333333
     font-size: 18px
     font-family: Roboto
+    color: #ffffff
 
-.wrapper
+.app
     min-height: 100vh
     position: relative
     padding-bottom: 120px
@@ -115,8 +125,9 @@ main
     max-width: 1000px
     margin: 0 auto
 
-.peoples
+.stars
     display: flex
     flex-wrap: wrap
     margin: 40px 20px
+    justify-content: space-between
 </style>

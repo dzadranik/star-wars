@@ -1,8 +1,8 @@
 <template lang="pug">
-    .people( :class="{show: this.isShow}")
-        .people__avatar( :style='this.background') {{people.name[0]}}
-        div {{people.name}}
-        .people__species {{species.name}}
+    .star( :class="{show: this.isShow}")
+        .star__avatar( :style='this.background') {{star.name[0]}}
+        div {{star.name}}
+        .star__species {{species.name}}
 </template>
 
 <script>
@@ -11,7 +11,7 @@ function getRandomInt(min, max) {
 }
 export default {
 	name: "Star",
-	props: ["people"],
+	props: ["star"],
 
 	data: function() {
 		return {
@@ -20,7 +20,7 @@ export default {
 		};
 	},
 	mounted() {
-		fetch(this.people.species)
+		fetch(this.star.species)
 			.then(res => res.json())
 			.then(
 				result => {
@@ -50,9 +50,7 @@ export default {
 </script>
 
 <style scoped lang="sass">
-.people
-    background: black
-    color: white
+.star
     background: #1A1A1A
     border-radius: 8px
     flex: 0 0 calc(50% - 10px)
@@ -73,9 +71,6 @@ export default {
     >*
         margin-bottom: 10px
 
-    &:nth-child(odd)
-        margin-right: 20px
-
     &:hover
         box-shadow: 0px 10px 40px rgba(37, 136, 167, 0.38)
     
@@ -94,4 +89,5 @@ export default {
         color: #808080
         fonr-size: 13px
         line-height: 15px
+
 </style>

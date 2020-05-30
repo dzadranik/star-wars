@@ -17,7 +17,7 @@ export default {
 .loader
     width: 240px
     height: 240px
-    margin: 60px auto 0
+    margin: 40px auto
     padding-top: 86px
     box-sizing: border-box
 
