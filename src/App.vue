@@ -2,78 +2,62 @@
     #app.app.js-app
         .header
             a.logo(href="/")
-        main
-            .stars(v-show="isLoaded")
+        main.main
+            Search
+            .stars
                 Star(v-for="item in stars" :star="item" :key="item.id")
 
-            Loader(v-show="!isLoaded || loadMore")
+            Loader(v-show="!isLoaded")
                 
         .footer STAR WARS CHARACTER Encyclopedia, 2019
 </template>
 
 <script>
 import Star from "./components/Star.vue";
+import Search from "./components/Search.vue";
 import Loader from "./components/Loader.vue";
 import { mapState } from "vuex";
 
 export default {
-	name: "App",
-	components: {
-		Star,
-		Loader
-	},
-	data: function() {
-		return {
-			loadMore: false
-		};
-	},
-	computed: {
-		...mapState(["stars", "isLoaded"])
-		// stars: function() {
-		// 	return this.$store.state.stars;
-		// },
-		// isLoaded: function() {
-		// 	return this.$store.state.isLoaded;
-		// }
-	},
-	methods: {
-		getMoreStars: function() {
-			this.stars.push(...this.$store.getters.getMoreStars());
-		},
-		changeLoadMore: function() {
-			this.loadMore = !this.loadMore;
-		}
-	},
-	mounted() {
-		let app = document.querySelector(".js-app"),
-			commit = this.$store.commit,
-			getMoreStars = this.getMoreStars,
-			changeLoadMore = this.changeLoadMore,
-			isLock = false;
+    name: "App",
+    components: {
+        Star,
+        Loader,
+        Search
+    },
+    computed: {
+        ...mapState(["stars", "isLoaded"])
+    },
+    methods: {
+        getMoreStars: function() {
+            this.$store.commit("getStar");
+        }
+    },
+    mounted() {
+        let commit = this.$store.commit,
+            getMoreStars = this.getMoreStars,
+            isLock = false;
 
-		setTimeout(function() {
-			commit("getStar");
-			isLock = true;
-		}, 1000);
+        setTimeout(function() {
+            commit("getStar");
+            isLock = true;
+        }, 1000);
 
-		window.addEventListener("scroll", function() {
-			if (
-				pageYOffset >=
-					app.offsetHeight -
-						document.documentElement.clientHeight -
-						1 &&
-				isLock
-			) {
-				isLock = false;
-				changeLoadMore();
-				setTimeout(function() {
-					getMoreStars();
-					isLock = true;
-					changeLoadMore();
-				}, 1000);
-			}
-		});
-	}
+        window.addEventListener("scroll", function() {
+            if (
+                document.documentElement.scrollTop + window.innerHeight >=
+                    document.documentElement.offsetHeight - 10 &&
+                isLock
+            ) {
+                isLock = false;
+                commit("changeIsLoaded");
+                setTimeout(function() {
+                    getMoreStars();
+                    isLock = true;
+                }, 1000);
+            }
+        });
+    }
 };
 </script>
 
@@ -121,13 +105,14 @@ body
     bottom: 0
     width: 100%
 
-main
+.main
     max-width: 1000px
     margin: 0 auto
+    padding: 0 20px
 
 .stars
     display: flex
     flex-wrap: wrap
-    margin: 40px 20px
+    margin: 40px 0
     justify-content: space-between
 </style>

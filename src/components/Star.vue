@@ -90,4 +90,6 @@ export default {
         fonr-size: 13px
         line-height: 15px
 
+    @media only screen and (max-width: 766px)
+        flex-basis: 100%
 </style>
