@@ -24,5 +24,4 @@ export default {
     svg
         animation: spin 3s infinite linear
         transform-origin: 120px
-
 </style>

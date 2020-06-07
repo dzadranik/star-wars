@@ -1,53 +1,35 @@
 <template lang="pug">
     .search
-        label(for="search" :class="{'to-top': !this.isEmptyInput}") Search by name
-        input(id="search" v-on:input="activeInput")
+        label.search__label(for="search" :class="{'to-top': !isEmptyInput}") Search by name
+        input.search__input(id="search" @input="searchPersons" v-model="inputValue")
 </template>
 
 <script>
-function debounce(func, wait, immediate) {
-    var timeout;
-    return function() {
-        var context = this,
-            args = arguments;
-        var later = function() {
-            timeout = null;
-            if (!immediate) func.apply(context, args);
-        };
-        var callNow = immediate && !timeout;
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-        if (callNow) func.apply(context, args);
-    };
-}
+import { mapMutations } from "vuex";
+import { debounce } from "../js/help-function";
+
 export default {
     name: "Search",
     data: function() {
         return {
-            search: ""
+            inputValue: ""
         };
     },
     computed: {
         isEmptyInput: function() {
-            return this.search === "";
+            return this.inputValue === "" ? true : false;
         }
     },
     methods: {
-        activeInput: function() {
-            let commit = this.$store.commit,
-                searchValue = document.getElementById("search").value;
-            this.search = searchValue;
-
-            function searchCommit() {
-                commit("search", searchValue);
-            }
-            debounce(searchCommit, 1000)();
+        ...mapMutations(["SEARCH_PERSONS"]),
+        searchPersons() {
+            debounce(this.SEARCH_PERSONS, 400)(this.inputValue);
         }
     }
 };
 </script>
 
-<style scoped lang="sass">
+<style lang="sass">
 .search
     position: relative
     margin: 60px auto
@@ -56,7 +38,7 @@ export default {
     width: 800px
     max-width: 100%
 
-    label
+    &__label
         font-size: 16px
         color: #808080
         position: absolute
@@ -66,7 +48,7 @@ export default {
         &.to-top
             bottom: 25px
 
-    input
+    &__input
         background: transparent
         border-bottom: 1px solid #808080
         border-top: 0

@@ -1,60 +1,57 @@
 <template lang="pug">
-    #app.app.js-app
-        .header
-            a.logo(href="/")
-        main.main
+    #app.sw
+        .sw__header
+        main.sw__main
             Search
-            .stars
-                Star(v-for="item in stars" :star="item" :key="item.id")
+            .sw__persons(v-if="hasPersons")
+                Person(
+                    v-for="person in persons"
+                    :key="person.id"
+                    :person="person"
+                    )
 
-            Loader(v-show="!isLoaded")
+            Loader(v-if="isLoading")
+            .sw__all(v-if="!hasMorePerons") 
+                include ./assets/img/falcon.svg
                 
-        .footer STAR WARS CHARACTER Encyclopedia, 2019
+        .sw__footer STAR WARS CHARACTER Encyclopedia, 2019
+
+        Modal(v-if="isModalShow")
+
 </template>
 
 <script>
-import Star from "./components/Star.vue";
+import { mapState, mapGetters, mapMutations } from "vuex";
+import Person from "./components/Person.vue";
 import Search from "./components/Search.vue";
 import Loader from "./components/Loader.vue";
-import { mapState } from "vuex";
+import Modal from "./components/Modal.vue";
 
 export default {
     name: "App",
     components: {
-        Star,
+        Person,
         Loader,
-        Search
+        Search,
+        Modal
     },
     computed: {
-        ...mapState(["stars", "isLoaded"])
+        ...mapState(["persons", "isLoading", "hasMorePerons", "isModalShow"]),
+        ...mapGetters(["hasPersons"])
     },
     methods: {
-        getMoreStars: function() {
-            this.$store.commit("getStar");
-        }
+        ...mapMutations(["LOAD_PERSONS"])
     },
     mounted() {
-        let commit = this.$store.commit,
-            getMoreStars = this.getMoreStars,
-            isLock = false;
-
-        setTimeout(function() {
-            commit("getStar");
-            isLock = true;
-        }, 1000);
+        let loadPersons = this.LOAD_PERSONS;
+        loadPersons();
 
         window.addEventListener("scroll", function() {
             if (
                 document.documentElement.scrollTop + window.innerHeight >=
-                    document.documentElement.offsetHeight - 10 &&
-                isLock
+                document.documentElement.offsetHeight - 10
             ) {
-                isLock = false;
-                commit("changeIsLoaded");
-                setTimeout(function() {
-                    getMoreStars();
-                    isLock = true;
-                }, 1000);
+                loadPersons();
             }
         });
     }
@@ -69,50 +66,49 @@ body
     font-size: 18px
     font-family: Roboto
     color: #ffffff
+    &.hidden
+        overflow: hidden
+        width: 100%
+        height: 100vh
 
-.app
+.sw
     min-height: 100vh
     position: relative
-    padding-bottom: 120px
+    padding-bottom: 110px
 
-.header
-    height: 33vh
-    width: 100%
-    background-image: url(./assets/img/header.jpg)
-    background-position: center center
-    background-repeat: no-repeat
-    background-size: cover
-    display: flex
-    align-items: center
-    justify-content: center
+    &__header
+        height: 33vh
+        width: 100%
+        background-image: url(./assets/img/logo.png), url(./assets/img/header.jpg)
+        background-position: center center
+        background-repeat: no-repeat
+        background-size: auto 50%, cover
+        display: flex
+        align-items: center
+        justify-content: center
 
-.logo
-    display: block
-    background-image: url(./assets/img/logo.png)
-    height: 60%
-    width: 50%
-    background-position: center center
-    background-repeat: no-repeat
-    background-size: contain
+    &__main
+        max-width: 1000px
+        margin: 0 auto
+        padding: 0 20px
 
-.footer
-    background: #1A1A1A
-    text-align: center
-    color: #ffffff
-    padding: 30px
-    text-transform: uppercase
-    position: absolute
-    bottom: 0
-    width: 100%
+    &__persons
+        display: flex
+        flex-wrap: wrap
+        margin: 40px 0
+        justify-content: space-between
 
-.main
-    max-width: 1000px
-    margin: 0 auto
-    padding: 0 20px
+    &__all
+        text-align: center
+        margin: 30px 0
 
-.stars
-    display: flex
-    flex-wrap: wrap
-    margin: 40px 0
-    justify-content: space-between
+    &__footer
+        background: #1A1A1A
+        text-align: center
+        color: #ffffff
+        padding: 30px
+        text-transform: uppercase
+        position: absolute
+        bottom: 0
+        width: 100%
 </style>
