@@ -11,7 +11,7 @@
                     )
 
             Loader(v-if="isLoading")
-            .sw__all(v-if="!hasMorePerons") 
+            .sw__all(v-if="!hasMorePerons || isSearch") 
                 include ./assets/img/falcon.svg
                 
         .sw__footer STAR WARS CHARACTER Encyclopedia, 2019
@@ -36,7 +36,13 @@ export default {
         Modal
     },
     computed: {
-        ...mapState(["persons", "isLoading", "hasMorePerons", "isModalShow"]),
+        ...mapState([
+            "persons",
+            "isLoading",
+            "hasMorePerons",
+            "isModalShow",
+            "isSearch"
+        ]),
         ...mapGetters(["hasPersons"])
     },
     methods: {

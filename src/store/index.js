@@ -59,7 +59,7 @@ export default new Vuex.Store({
         },
 
         [HIDE_MODAL](state) {
-            // document.getElementById('app').style.cssText = ''
+            document.getElementById('app').style.cssText = ''
             document.body.style.cssText = ''
             state.isModalShow = false
             state.modalValue = {}
