@@ -3,7 +3,6 @@ export const loadPersons = (page) =>
 
 export const loadSpecies = (url) => {
     let replacedUrl = url.replace("http:/", "https:/");
-    console.log(replacedUrl)
     return fetch(replacedUrl).then(res => res.json())
 }
 
