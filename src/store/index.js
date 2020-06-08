@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { LOAD_PERSONS, SEARCH_PERSONS, SHOW_MODAL, HIDE_MODAL } from './mutation-types'
-import { loadPersons, loadSpecies, searchPersons } from '../api/request'
+import { loadPersons, searchPersons, loadOtherValue } from '../api/request'
 
 Vue.use(Vuex)
 
@@ -22,8 +22,8 @@ export default new Vuex.Store({
         hasPersons: state => {
             return state.persons.length > 0 ? true : false;
         },
-        getSpecies: () => url => {
-            return loadSpecies(url).then(res => res)
+        getOtherValue: () => url => {
+            return loadOtherValue(url).then(res => res)
         }
     },
     mutations: {
@@ -51,16 +51,11 @@ export default new Vuex.Store({
         },
 
         [SHOW_MODAL](state, value) {
-            let offset = pageYOffset
-            document.getElementById('app').style.cssText = ` top: -${offset}px; position: relative`
-            document.body.style.cssText = `overflow: hidden; width: 100%; height: 100vh;`
             state.isModalShow = true
             state.modalValue = value
         },
 
         [HIDE_MODAL](state) {
-            document.getElementById('app').style.cssText = ''
-            document.body.style.cssText = ''
             state.isModalShow = false
             state.modalValue = {}
         }

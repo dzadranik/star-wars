@@ -1,5 +1,8 @@
 <template lang="pug">
-    .person(@click="showModal")
+    .person(
+        v-show="isLoad"
+        @click="showModal"
+        )
         .person__avatar(:style="background") {{person.name[0]}}
         .person__name {{person.name}}
         .person__species {{species}}
@@ -16,11 +19,12 @@ export default {
     },
     data: function() {
         return {
-            species: ""
+            species: "",
+            isLoad: false
         };
     },
     computed: {
-        ...mapGetters(["getSpecies"]),
+        ...mapGetters(["getOtherValue"]),
         background: function() {
             return `background: ${getRandomColor()}`;
         }
@@ -38,8 +42,13 @@ export default {
     },
     mounted() {
         if (this.person.species.length > 0) {
-            let species = this.getSpecies(this.person.species[0]);
-            species.then(res => (this.species = res.name));
+            let species = this.getOtherValue(this.person.species[0]);
+            species.then(res => {
+                this.species = res.name;
+                this.isLoad = true;
+            });
+        } else {
+            this.isLoad = 'true';
         }
     }
 };
@@ -76,7 +85,6 @@ export default {
         color: #808080
         font-size: 13px
         line-height: 15px
-        height: 15px
 
     @media only screen and (max-width: 766px)
         flex-basis: 100%
