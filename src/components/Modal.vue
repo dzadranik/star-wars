@@ -48,7 +48,7 @@ export default {
 
 .modal
     &__wrapper
-        position: absolute
+        position: fixed
         top: 0
         right: 0
         bottom: 0
@@ -79,7 +79,7 @@ export default {
             +transition(stroke)
         &:hover
             .close
-                stroke: rgba(37, 136, 167)
+                stroke: rgba(37, 136, 167, 1)
         
     &__header
         border-bottom: 2px solid #808080

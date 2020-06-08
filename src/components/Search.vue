@@ -23,7 +23,7 @@ export default {
     methods: {
         ...mapMutations(["SEARCH_PERSONS"]),
         searchPersons() {
-            debounce(this.SEARCH_PERSONS, 400)(this.inputValue);
+            debounce(this.SEARCH_PERSONS, 600)(this.inputValue);
         }
     }
 };

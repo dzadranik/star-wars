@@ -66,10 +66,6 @@ body
     font-size: 18px
     font-family: Roboto
     color: #ffffff
-    &.hidden
-        overflow: hidden
-        width: 100%
-        height: 100vh
 
 .sw
     min-height: 100vh

@@ -51,15 +51,18 @@ export default new Vuex.Store({
         },
 
         [SHOW_MODAL](state, value) {
+            let offset = pageYOffset
+            document.getElementById('app').style.cssText = ` top: -${offset}px; position: relative`
+            document.body.style.cssText = `overflow: hidden; width: 100%; height: 100vh;`
             state.isModalShow = true
             state.modalValue = value
-            document.body.classList.add("hidden")
         },
 
         [HIDE_MODAL](state) {
+            // document.getElementById('app').style.cssText = ''
+            document.body.style.cssText = ''
             state.isModalShow = false
             state.modalValue = {}
-            document.body.classList.remove("hidden")
         }
     },
 })
