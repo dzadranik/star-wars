@@ -170,12 +170,16 @@ export default {
 
     @media only screen and (max-width: 766px)
         &__container
+            min-width: auto
             width: 100%
             height: 100%
             top: 0
             bottom: 0
             left: 0
             transform: none
+            padding: 20px
+        &__header
+            padding-bottom: 40px
         &__descriptions
             flex-wrap: wrap
         &__description

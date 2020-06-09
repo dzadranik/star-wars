@@ -26,7 +26,7 @@ export default {
     computed: {
         ...mapGetters(["getOtherValue"]),
         background: function() {
-            return `background: ${getRandomColor()}`;
+            return `background-color: ${getRandomColor()}`;
         }
     },
     methods: {
@@ -48,7 +48,7 @@ export default {
                 this.isLoad = true;
             });
         } else {
-            this.isLoad = 'true';
+            this.isLoad = "true";
         }
     }
 };

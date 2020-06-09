@@ -11,7 +11,7 @@
                     )
 
             Loader(v-if="isLoading")
-            .sw__all(v-if="!hasMorePerons || isSearch") 
+            .sw__all(v-if="!hasMorePersons || isSearch") 
                 include ./assets/img/falcon.svg
                 
         .sw__footer STAR WARS CHARACTER Encyclopedia, 2019
@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from "vuex";
+import { mapState, mapMutations } from "vuex";
 import Person from "./components/Person.vue";
 import Search from "./components/Search.vue";
 import Loader from "./components/Loader.vue";
@@ -39,11 +39,13 @@ export default {
         ...mapState([
             "persons",
             "isLoading",
-            "hasMorePerons",
+            "hasMorePersons",
             "isModalShow",
             "isSearch"
         ]),
-        ...mapGetters(["hasPersons"])
+        hasPersons: function() {
+            return this.persons.length > 0 ? true : false;
+        }
     },
     methods: {
         ...mapMutations(["LOAD_PERSONS"])

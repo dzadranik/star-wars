@@ -9,7 +9,7 @@ export default new Vuex.Store({
     state: {
         isLoading: true,
         isSearch: false,
-        hasMorePerons: true,
+        hasMorePersons: true,
         pageNumber: 1,
 
         isModalShow: false,
@@ -19,25 +19,23 @@ export default new Vuex.Store({
 
     },
     getters: {
-        hasPersons: state => {
-            return state.persons.length > 0 ? true : false;
-        },
         getOtherValue: () => url => {
             return loadOtherValue(url).then(res => res)
         }
     },
     mutations: {
         [LOAD_PERSONS](state) {
-            if (state.hasMorePerons && !state.isSearch) {
+            if (state.hasMorePersons && !state.isSearch) {
                 state.isLoading = true
                 loadPersons(state.pageNumber)
                     .then(result => {
                         state.persons.push(...result.results)
-                        state.persons.length !== result.count ? state.pageNumber++ : state.hasMorePerons = false
+                        state.persons.length !== result.count ? state.pageNumber++ : state.hasMorePersons = false
                     })
                     .catch(err => console.log(err))
                     .finally(() => {
                         state.isLoading = false
+
                     })
             }
         },

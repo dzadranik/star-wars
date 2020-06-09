@@ -27,6 +27,6 @@ export const getRandomInt = function (min, max) {
 }
 
 export const getRandomColor = function () {
-    let random = getRandomInt(1, 150)
+    let random = getRandomInt(0, 148)
     return colors[random].color
 }
