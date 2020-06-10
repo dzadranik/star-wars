@@ -67,7 +67,7 @@ export default {
 </script>
 
 <style lang="sass">
-@import styles/reset
+@import sass/reset
 
 body
     background: #333333

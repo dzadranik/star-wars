@@ -75,7 +75,7 @@ export default {
 };
 </script>
 <style lang="sass">
-@import ../styles/mixins
+@import ../sass/mixins
 
 .modal
     &__wrapper
@@ -91,7 +91,7 @@ export default {
     &__container
         background: #1A1A1A
         padding: 80px
-        min-width: 800px
+        min-width: 750px
         max-width: 100%
         box-sizing: border-box
         border-radius: 8px
@@ -146,7 +146,7 @@ export default {
             height: 24px
             width: 24px
             left: 0
-            top: 5px
+            top: 2px
             content: ''
             display: block
             position: absolute
@@ -178,10 +178,13 @@ export default {
             left: 0
             transform: none
             padding: 20px
+
         &__header
             padding-bottom: 40px
+
         &__descriptions
             flex-wrap: wrap
+
         &__description
             flex: 0 0 100%
 

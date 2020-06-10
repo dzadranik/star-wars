@@ -55,7 +55,7 @@ export default {
 </script>
 
 <style lang="sass">
-@import ../styles/mixins
+@import ../sass/mixins
 
 .person
     background: #1A1A1A

@@ -49,7 +49,7 @@ export default {
             bottom: 25px
 
     &__input
-        background: transparent
+        background: transparent url(../assets/img/icon-search.svg) no-repeat right center
         border-bottom: 1px solid #808080
         border-top: 0
         padding: 5px 0
