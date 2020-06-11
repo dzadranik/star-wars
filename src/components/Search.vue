@@ -18,14 +18,18 @@ export default {
     computed: {
         isEmptyInput: function() {
             return this.inputValue === "" ? true : false;
+        },
+        serchDebounce: function() {
+            return debounce(this.SEARCH_PERSONS, 900);
         }
     },
     methods: {
         ...mapMutations(["SEARCH_PERSONS"]),
         searchPersons() {
-            debounce(this.SEARCH_PERSONS, 900)(this.inputValue); //!!!
+            this.serchDebounce(this.inputValue); //!!!
         }
-    }
+    },
+    mounted() {}
 };
 </script>
 
