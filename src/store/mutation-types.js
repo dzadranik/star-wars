@@ -1,4 +1,4 @@
-export const LOAD_PERSONS = 'LOAD_PERSONS';
-export const SEARCH_PERSONS = 'SEARCH_PERSONS';
-export const SHOW_MODAL = 'SHOW_MODAL';
-export const HIDE_MODAL = 'HIDE_MODAL';
+export const LOAD_PERSONS = "LOAD_PERSONS";
+export const SEARCH_PERSONS = "SEARCH_PERSONS";
+export const SET_MODAL_VALUE = "SET_MODAL_VALUE";
+export const TOGGLE_MODAL_VISIBLE = "TOGGLE_MODAL_VISIBLE";

@@ -1,39 +1,46 @@
 <template lang="pug">
     .search
-        label.search__label(for="search" :class="{'to-top': !isEmptyInput}") Search by name
-        input.search__input(id="search" @input="searchPersons" v-model="inputValue")
+        label.search__label(
+            for="search"
+            :class="{'to-top': !isEmptyInput}"
+            ) Search by name
+        input.search__input#search(
+            v-model="inputValue"
+            @input="searchPersons" 
+            )
 </template>
 
 <script>
-import { mapMutations } from "vuex";
-import { debounce } from "../js/help-function";
+import { mapActions } from "vuex";
+import { debounce } from "../js/help-functions";
 
 export default {
-    name: "Search",
-    data: function() {
-        return {
-            inputValue: ""
-        };
-    },
-    computed: {
-        isEmptyInput: function() {
-            return this.inputValue === "" ? true : false;
-        },
-        serchDebounce: function() {
-            return debounce(this.SEARCH_PERSONS, 900);
-        }
-    },
-    methods: {
-        ...mapMutations(["SEARCH_PERSONS"]),
-        searchPersons() {
-            this.serchDebounce(this.inputValue); //!!!
-        }
-    },
-    mounted() {}
+	name: "Search",
+	data: function() {
+		return {
+			inputValue: ""
+		};
+	},
+	computed: {
+		isEmptyInput: function() {
+			return this.inputValue === "" ? true : false;
+		},
+		debounceSerch: function() {
+			return debounce(this.searchPersonsValue, 900);
+		}
+	},
+	methods: {
+		...mapActions(["searchPersonsValue"]),
+		searchPersons() {
+			this.debounceSerch(this.inputValue);
+		}
+	}
 };
 </script>
 
 <style lang="sass">
+@import ~@/sass/icon-base
+
 .search
     position: relative
     margin: 60px auto
@@ -53,7 +60,7 @@ export default {
             bottom: 25px
 
     &__input
-        background: transparent url(../assets/img/icon-search.svg) no-repeat right center
+        background: transparent $icon-search no-repeat right center
         border-bottom: 1px solid #808080
         border-top: 0
         padding: 5px 0

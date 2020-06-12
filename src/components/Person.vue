@@ -1,7 +1,7 @@
 <template lang="pug">
     .person(
         v-show="isLoad"
-        @click="showModal"
+        @click="showModalInformation"
         )
         .person__avatar(:style="background") {{person.name[0]}}
         .person__name {{person.name}}
@@ -9,53 +9,53 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
-import { getRandomColor } from "../js/help-function";
+import { mapActions } from "vuex";
+import { getRandomColor } from "../js/help-functions";
+import { loadPersonsValue } from "../api/request";
 
 export default {
-    name: "Person",
-    props: {
-        person: Object
-    },
-    data: function() {
-        return {
-            species: "",
-            isLoad: false
-        };
-    },
-    computed: {
-        ...mapGetters(["getOtherValue"]),
-        background: function() {
-            return `background-color: ${getRandomColor()}`;
-        }
-    },
-    methods: {
-        ...mapMutations(["SHOW_MODAL"]),
+	name: "Person",
+	props: {
+		person: Object
+	},
+	data: function() {
+		return {
+			species: "",
+			isLoad: false || Boolean //TODO: типизация !!
+		};
+	},
+	computed: {
+		background: function() {
+			return `background-color: ${getRandomColor()}`;
+		}
+	},
+	methods: {
+		...mapActions(["showModal"]),
 
-        showModal: function() {
-            this.SHOW_MODAL({
-                person: this.person,
-                species: this.species,
-                background: this.background
-            });
-        }
-    },
-    mounted() {
-        if (this.person.species.length > 0) {
-            let species = this.getOtherValue(this.person.species[0]);
-            species.then(res => {
-                this.species = res.name;
-                this.isLoad = true;
-            });
-        } else {
-            this.isLoad = "true";
-        }
-    }
+		showModalInformation: function() {
+			this.showModal({
+				person: this.person,
+				species: this.species,
+				background: this.background
+			});
+		}
+	},
+	mounted() {
+		if (this.person.species.length > 0) {
+			let species = loadPersonsValue(this.person.species[0]);
+			species.then(res => {
+				this.species = res.name; //TODO: show persons after load species
+				this.isLoad = true;
+			});
+		} else {
+			this.isLoad = true;
+		}
+	}
 };
 </script>
 
 <style lang="sass">
-@import ../sass/mixins
+@import ~@/sass/mixins
 
 .person
     background: #1A1A1A

@@ -5,69 +5,84 @@
             Search
             .sw__persons(v-if="hasPersons")
                 Person(
-                    v-for="person in persons"
-                    :key="person.id"
+                    v-for="person, index in personsViews"
+                    :key="person.name + index"
                     :person="person"
                     )
 
             Loader(v-if="isLoading")
-            .sw__all(v-if="!hasMorePersons || isSearch") 
+            .sw__is-all(v-if="!nextPage || isSearch") 
                 include ./assets/img/falcon.svg
                 
         .sw__footer STAR WARS CHARACTER Encyclopedia, 2019
-
+        
         Modal(v-if="isModalShow")
 
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapActions } from "vuex";
 import Person from "./components/Person.vue";
 import Search from "./components/Search.vue";
 import Loader from "./components/Loader.vue";
 import Modal from "./components/Modal.vue";
 
 export default {
-    name: "App",
-    components: {
-        Person,
-        Loader,
-        Search,
-        Modal
-    },
-    computed: {
-        ...mapState([
-            "persons",
-            "isLoading",
-            "hasMorePersons",
-            "isModalShow",
-            "isSearch"
-        ]),
-        hasPersons: function() {
-            return this.persons.length > 0 ? true : false;
-        }
-    },
-    methods: {
-        ...mapMutations(["LOAD_PERSONS"])
-    },
-    mounted() {
-        let loadPersons = this.LOAD_PERSONS;
-        loadPersons();
+	name: "App",
+	components: {
+		Person,
+		Loader,
+		Search,
+		Modal
+	},
+	computed: {
+		...mapState([
+			"persons",
+			"personsSearch",
+			"isLoading",
+			"nextPage",
+			"isModalShow",
+			"isSearch"
+		]),
+		personsViews() {
+			if (this.isSearch) {
+				return this.personsSearch;
+			} else {
+				return this.persons;
+			}
+		},
+		hasPersons: function() {
+			return this.persons.length > 0 ? true : false;
+		}
+	},
+	methods: {
+		...mapActions(["loadPersons"])
+	},
+	mounted() {
+		let loadPersons = this.loadPersons;
+		loadPersons();
 
-        window.addEventListener("scroll", function() {
-            if (
-                document.documentElement.scrollTop + window.innerHeight >=
-                document.documentElement.offsetHeight - 10
-            ) {
-                loadPersons();
-            }
-        });
-    }
+		window.addEventListener("scroll", function() {
+			if (
+				document.documentElement.scrollTop + window.innerHeight >=
+				document.documentElement.offsetHeight - 10
+			) {
+				loadPersons();
+			}
+		});
+	}
 };
 </script>
 
 <style lang="sass">
 @import sass/reset
+.fade-enter-active, .fade-leave-active 
+    transition: all .5s
+    transform: translate(0, 0)
+
+.fade-enter, .fade-leave-to
+    opacity: 0
+    transform: translate(0, 50px)
 
 body
     background: #333333
@@ -102,7 +117,7 @@ body
         margin: 40px 0
         justify-content: space-between
 
-    &__all
+    &__is-all
         text-align: center
         margin: 30px 0
 
