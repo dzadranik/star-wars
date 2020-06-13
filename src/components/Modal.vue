@@ -67,12 +67,15 @@ export default {
 			let homeworld = await loadPersonsValue(this.person.homeworld);
 			this.homeworld = homeworld.name;
 		}
+		let filmsPromises = [];
 		if (this.person.films.length > 0) {
-			for (let i = 0; i < this.person.films.length; i++) {
-				let films = await loadPersonsValue(this.person.films[i]);
-				this.films.push(films.title);
-			}
+			filmsPromises = this.person.films.map(async item => {
+				let films = await loadPersonsValue(item);
+				return films.title;
+			});
 		}
+		let films = await Promise.all(filmsPromises);
+		this.films = films;
 		this.isLoad = true;
 	},
 	beforeDestroy() {
