@@ -1,8 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import {
-	LOAD_PERSONS,
-	SEARCH_PERSONS,
+	SET_PERSONS,
+	SET_NEXT_PAGE,
+	SET_IS_LOADING,
+	SET_SEARCH_PERSONS,
+	SET_IS_SEARCH,
 	SET_MODAL_VALUE,
 	TOGGLE_MODAL_VISIBLE,
 } from './mutation-types'
@@ -12,7 +15,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
 	state: {
-		isLoading: true,
+		isLoading: false,
 		isSearch: false,
 		nextPage: 'https://swapi.dev/api/people/',
 
@@ -20,31 +23,23 @@ export default new Vuex.Store({
 		modalValue: {},
 
 		persons: [],
-		personsSearch: [],
 	},
 	mutations: {
-		[LOAD_PERSONS](state) {
-			state.isLoading = true
-			setTimeout(function() {
-				loadPersonsValue(state.nextPage)
-					.then((result) => {
-						state.persons.push(...result.results)
-						state.nextPage = result.next
-					})
-					.catch((err) => console.log('!!', err))
-					.finally(() => {
-						state.isLoading = false
-					})
-			}, 1000)
+		[SET_PERSONS](state, persons) {
+			state.persons.push(...persons)
+		},
+		[SET_NEXT_PAGE](state, next) {
+			state.nextPage = next
+		},
+		[SET_IS_LOADING](state, bool) {
+			state.isLoading = bool
 		},
 
-		[SEARCH_PERSONS](state, value) {
+		[SET_SEARCH_PERSONS](state, persons) {
+			state.persons = persons
+		},
+		[SET_IS_SEARCH](state, value) {
 			state.isSearch = value === '' ? false : true
-			searchPersons(value)
-				.then((result) => {
-					state.personsSearch = result.results
-				})
-				.catch((err) => console.log('!!', err))
 		},
 
 		[TOGGLE_MODAL_VISIBLE](state) {
@@ -56,15 +51,29 @@ export default new Vuex.Store({
 		},
 	},
 	actions: {
-		loadPersons({ commit, state }) {
-			if (!state.isSearch) {
-				if (state.nextPage) {
-					commit('LOAD_PERSONS')
+		async loadPersons({ commit, state }) {
+			if (state.nextPage && !state.isSearch && !state.isLoading) {
+				commit('SET_IS_LOADING', true)
+				const value = await loadPersonsValue(state.nextPage)
+				if (value.results) {
+					setTimeout(function() {
+						commit('SET_PERSONS', value.results)
+						commit('SET_NEXT_PAGE', value.next)
+						commit('SET_IS_LOADING', false)
+					}, 1000)
+				} else {
+					console.log('!!ERROR', value)
 				}
 			}
 		},
-		searchPersonsValue({ commit }, value) {
-			commit('SEARCH_PERSONS', value)
+		searchPersons({ commit }, value) {
+			commit('SET_IS_SEARCH', value)
+			searchPersons(value)
+				.then((result) => {
+					commit('SET_SEARCH_PERSONS', result.results)
+					if (result.next) commit('SET_NEXT_PAGE', result.next)
+				})
+				.catch((err) => console.log('!!ERROR', err))
 		},
 		showModal({ commit }, value) {
 			commit('TOGGLE_MODAL_VISIBLE')

@@ -1,11 +1,11 @@
 <template lang="pug">
-    .person(
-        v-show="isLoad"
-        @click="showModalInformation"
-        )
-        .person__avatar(:style="background") {{person.name[0]}}
-        .person__name {{person.name}}
-        .person__species {{species}}
+.person(
+    v-show="isLoad"
+    @click="showModalInformation"
+    )
+    .person__avatar(:style="background") {{person.name[0]}}
+    .person__name {{person.name}}
+    .person__species {{species}}
 </template>
 
 <script>
@@ -21,7 +21,7 @@ export default {
 	data: function() {
 		return {
 			species: "",
-			isLoad: false || Boolean //TODO: типизация !!
+			isLoad: false
 		};
 	},
 	computed: {
@@ -40,13 +40,11 @@ export default {
 			});
 		}
 	},
-	mounted() {
+	async mounted() {
 		if (this.person.species.length > 0) {
-			let species = loadPersonsValue(this.person.species[0]);
-			species.then(res => {
-				this.species = res.name; //TODO: show persons after load species
-				this.isLoad = true;
-			});
+			let species = await loadPersonsValue(this.person.species[0]);
+			this.species = species.name;
+			this.isLoad = true;
 		} else {
 			this.isLoad = true;
 		}

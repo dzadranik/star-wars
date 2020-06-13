@@ -2,11 +2,11 @@
     .search
         label.search__label(
             for="search"
-            :class="{'to-top': !isEmptyInput}"
+            :class="{'is-top': !isEmptyInput}"
             ) Search by name
         input.search__input#search(
             v-model="inputValue"
-            @input="searchPersons" 
+            @input="search" 
             )
 </template>
 
@@ -25,14 +25,14 @@ export default {
 		isEmptyInput: function() {
 			return this.inputValue === "" ? true : false;
 		},
-		debounceSerch: function() {
-			return debounce(this.searchPersonsValue, 900);
+		debounceSearch: function() {
+			return debounce(this.searchPersons, 600);
 		}
 	},
 	methods: {
-		...mapActions(["searchPersonsValue"]),
-		searchPersons() {
-			this.debounceSerch(this.inputValue);
+		...mapActions(["searchPersons"]),
+		search() {
+			this.debounceSearch(this.inputValue);
 		}
 	}
 };
@@ -56,7 +56,7 @@ export default {
         bottom: 5px
         left: 0
         transition: all ease-in .3s
-        &.to-top
+        &.is-top
             bottom: 25px
 
     &__input

@@ -1,22 +1,22 @@
 <template lang="pug">
-    #app.sw
-        .sw__header
-        main.sw__main
-            Search
-            .sw__persons(v-if="hasPersons")
-                Person(
-                    v-for="person, index in personsViews"
-                    :key="person.name + index"
-                    :person="person"
-                    )
+#app.sw
+    .sw__header
+    main.sw__main
+        Search
+        .sw__persons(v-if="hasPersons")
+            Person(
+                v-for="person, index in persons"
+                :key="'person-' + index"
+                :person="person"
+                )
 
-            Loader(v-if="isLoading")
-            .sw__is-all(v-if="!nextPage || isSearch") 
-                include ./assets/img/falcon.svg
-                
-        .sw__footer STAR WARS CHARACTER Encyclopedia, 2019
-        
-        Modal(v-if="isModalShow")
+        Loader(v-if="isLoading")
+        .sw__is-all(v-if="!nextPage || isSearch") 
+            include ./assets/img/falcon.svg
+            
+    .sw__footer STAR WARS CHARACTER Encyclopedia, 2019
+    
+    Modal(v-if="isModalShow")
 
 </template>
 
@@ -38,19 +38,11 @@ export default {
 	computed: {
 		...mapState([
 			"persons",
-			"personsSearch",
 			"isLoading",
 			"nextPage",
 			"isModalShow",
 			"isSearch"
 		]),
-		personsViews() {
-			if (this.isSearch) {
-				return this.personsSearch;
-			} else {
-				return this.persons;
-			}
-		},
 		hasPersons: function() {
 			return this.persons.length > 0 ? true : false;
 		}
@@ -76,13 +68,7 @@ export default {
 
 <style lang="sass">
 @import sass/reset
-.fade-enter-active, .fade-leave-active 
-    transition: all .5s
-    transform: translate(0, 0)
-
-.fade-enter, .fade-leave-to
-    opacity: 0
-    transform: translate(0, 50px)
+@import sass/animation
 
 body
     background: #333333

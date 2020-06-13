@@ -6,7 +6,7 @@
         template(v-if="!isLoad")
             loader
             
-        transition-group(name="fade")
+        transition-group(name="to-top")
             template(v-if="isLoad")
                 .modal__header(key="modal-header")
                     .modal__avatar(:style="modalValue.background") {{person.name[0]}}
@@ -61,20 +61,19 @@ export default {
 	methods: {
 		...mapActions(["hideModal"])
 	},
-	beforeMount() {
-		let allPromise = [];
+	async mounted() {
+		disableScroll();
 		if (this.person.homeworld.length > 0) {
-			let homeworld = loadPersonsValue(this.person.homeworld);
-			allPromise.push(homeworld.then(res => (this.homeworld = res.name)));
+			let homeworld = await loadPersonsValue(this.person.homeworld);
+			this.homeworld = homeworld.name;
 		}
 		if (this.person.films.length > 0) {
 			for (let i = 0; i < this.person.films.length; i++) {
-				let films = loadPersonsValue(this.person.films[i]);
-				allPromise.push(films.then(res => this.films.push(res.title)));
+				let films = await loadPersonsValue(this.person.films[i]);
+				this.films.push(films.title);
 			}
 		}
-		Promise.all(allPromise).then(() => (this.isLoad = true));
-		disableScroll();
+		this.isLoad = true;
 	},
 	beforeDestroy() {
 		enableScroll();
@@ -170,7 +169,6 @@ export default {
 
     &__item-value
         color: #ffffff
-        font-weight: bold
 
     @media only screen and (max-width: 766px)
         &__container
