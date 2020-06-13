@@ -93,6 +93,9 @@ export default {
     min-height: 100vh
     width: 100%
     backdrop-filter: blur(5px)
+    display: flex
+    align-items: center
+    justify-content: center
 
     &__container
         background: #1A1A1A
@@ -101,11 +104,8 @@ export default {
         max-width: 100%
         box-sizing: border-box
         border-radius: 8px
-        position: absolute
-        top: 50%
-        left: 50%
+        position: relative
         box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.4)
-        transform: translate(-50%, -50%)
     
     &__close
         position: absolute
