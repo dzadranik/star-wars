@@ -64,18 +64,24 @@ export default {
 	async mounted() {
 		disableScroll();
 		if (this.person.homeworld.length > 0) {
-			let homeworld = await loadPersonsValue(this.person.homeworld);
-			this.homeworld = homeworld.name;
+			try {
+				let homeworld = await loadPersonsValue(this.person.homeworld);
+				this.homeworld = homeworld.name;
+			} catch (error) {
+				console.log(error);
+			}
 		}
-		let filmsPromises = [];
 		if (this.person.films.length > 0) {
-			filmsPromises = this.person.films.map(async item => {
-				let films = await loadPersonsValue(item);
-				return films.title;
-			});
+			const filmsPromises = this.person.films.map(link =>
+				loadPersonsValue(link).then(films => films.title)
+			);
+			try {
+				const films = await Promise.all(filmsPromises);
+				this.films = films;
+			} catch (error) {
+				console.log(error);
+			}
 		}
-		let films = await Promise.all(filmsPromises);
-		this.films = films;
 		this.isLoad = true;
 	},
 	beforeDestroy() {

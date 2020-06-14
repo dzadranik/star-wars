@@ -3,7 +3,7 @@
     v-show="isLoad"
     @click="showModalInformation"
     )
-    .person__avatar(:style="background") {{person.name[0]}}
+    .person__avatar(:style="getBackground()") {{person.name[0]}}
     .person__name {{person.name}}
     .person__species {{species}}
 </template>
@@ -24,19 +24,17 @@ export default {
 			isLoad: false
 		};
 	},
-	computed: {
-		background: function() {
-			return `background-color: ${getRandomColor()}`;
-		}
-	},
 	methods: {
 		...mapActions(["showModal"]),
+		getBackground: function() {
+			return `background-color: ${getRandomColor()}`;
+		},
 
 		showModalInformation: function() {
 			this.showModal({
 				person: this.person,
 				species: this.species,
-				background: this.background
+				background: this.getBackground()
 			});
 		}
 	},
@@ -58,6 +56,7 @@ export default {
 .person
     background: #1A1A1A
     border-radius: 8px
+    width: 45%
     flex: 0 0 calc(50% - 15px)
     margin-bottom: 30px
     display: flex
