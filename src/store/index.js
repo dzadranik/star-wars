@@ -54,26 +54,27 @@ export default new Vuex.Store({
 		async loadPersons({ commit, state }) {
 			if (state.nextPage && !state.isSearch && !state.isLoading) {
 				commit('SET_IS_LOADING', true)
-				const value = await loadPersonsValue(state.nextPage)
-				if (value.results) {
+				try {
+					const response = await loadPersonsValue(state.nextPage)
 					setTimeout(function() {
-						commit('SET_PERSONS', value.results)
-						commit('SET_NEXT_PAGE', value.next)
+						commit('SET_PERSONS', response.results)
+						commit('SET_NEXT_PAGE', response.next)
 						commit('SET_IS_LOADING', false)
 					}, 1000)
-				} else {
-					console.log('!!ERROR', value)
+				} catch (error) {
+					console.log('!!ERROR', error)
 				}
 			}
 		},
-		searchPersons({ commit }, value) {
+		async searchPersons({ commit }, value) {
 			commit('SET_IS_SEARCH', value)
-			searchPersons(value)
-				.then((result) => {
-					commit('SET_SEARCH_PERSONS', result.results)
-					if (result.next) commit('SET_NEXT_PAGE', result.next)
-				})
-				.catch((err) => console.log('!!ERROR', err))
+			try {
+				const response = await searchPersons(value)
+				commit('SET_SEARCH_PERSONS', response.results)
+				if (response.next) commit('SET_NEXT_PAGE', response.next)
+			} catch (error) {
+				console.log('!!ERROR', error)
+			}
 		},
 		showModal({ commit }, value) {
 			commit('TOGGLE_MODAL_VISIBLE')

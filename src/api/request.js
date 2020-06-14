@@ -1,14 +1,16 @@
+import axios from 'axios'
+
 export const loadPersonsValue = async (url) => {
 	let replacedUrl = url.replace('http:/', 'https:/')
-	try {
-		const response = await fetch(replacedUrl)
-		return await response.json()
-	} catch (error) {
-		return error
-	}
+	const response = await axios.get(replacedUrl)
+	return response.data
 }
 
-export const searchPersons = (value) =>
-	fetch(`https://swapi.dev/api/people/?search=${value}`)
-		.then((res) => res.json())
-		.catch((error) => error)
+export const searchPersons = async (value) => {
+	const response = await axios.get('https://swapi.dev/api/people/', {
+		params: {
+			search: value,
+		},
+	})
+	return response.data
+}
